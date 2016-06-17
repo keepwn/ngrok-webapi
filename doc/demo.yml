@@ -1,0 +1,14 @@
+server_addr: tunnel.mydomain.com:4443
+trust_host_root_certs: false
+tunnels:
+  a1:
+    proto:
+      tcp: 127.0.0.1:22
+    remote_port: 9000
+    subdomain: test1
+  a2:
+    proto:
+      http: 172.0.0.8:8080
+    auth: user:password
+    remote_port: 8000
+    subdomain: test1
