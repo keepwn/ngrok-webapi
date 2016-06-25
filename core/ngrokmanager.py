@@ -35,6 +35,7 @@ class NgrokManager:
         tunnel = Tunnel.get(Tunnel.id == id)
         tunnel.starttime = int(time.time())
         tunnel.save()
+        return tunnel
 
     def list(self):
         tunnel_dicts = []
@@ -60,10 +61,10 @@ class NgrokManager:
 
     def start(self, id):
         try:
-            tunnel_instance = self.get_tunnel_instance_by_id(id)
+            # update starttime
+            tunnel = self.update_tunnel_start_time(id)
+            tunnel_instance = self.get_tunnel_instance(tunnel)
             if tunnel_instance.exists():
-                # update starttime
-                self.update_tunnel_start_time(id)
                 tunnel_instance.start()
                 return self.get(id)
             else:
@@ -84,11 +85,11 @@ class NgrokManager:
 
     def rebuild(self, id):
         try:
-            tunnel_instance = self.get_tunnel_instance_by_id(id)
+            # update starttime
+            tunnel = self.update_tunnel_start_time(id)
+            tunnel_instance = self.get_tunnel_instance(tunnel)
             if tunnel_instance.exists():
                 tunnel_instance.down()
-            # update starttime
-            self.update_tunnel_start_time(id)
             tunnel_instance.up()
 
             return self.get(id)
