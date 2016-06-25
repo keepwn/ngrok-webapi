@@ -80,7 +80,7 @@ class Ngrok:
         return res
 
     def log(self):
-        res = self.__log()
+        res = self.__log(self.start_time)
         return res.split('\n')
 
     def init_config_file(self):
