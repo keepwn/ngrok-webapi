@@ -43,10 +43,14 @@ class Ngrok:
 
         # get maping url
         mapping = ''
-        regex1 = re.compile(r'^.*Tunnel established at(.*?)$', re.MULTILINE)
-        matched = regex1.findall(self.__log(self.start_time))
-        if matched:
-            mapping = matched.pop().strip()
+        regex1 = re.compile(r'^.*Tunnel established at(.*?)$')
+        # fetch log using stream mode
+        for line in self.__log_stream(since=self.start_time):
+            line = line.strip().decode()
+            matched = regex1.search(line)
+            if matched:
+                mapping = matched.group(1).strip()
+                break
 
         # get address and port from mapping
         proto = ''
@@ -67,20 +71,34 @@ class Ngrok:
         info['port'] = port
         return info
 
-    def __log(self, since=0):
+    def __log(self, since=0, tail='all'):
         container_id = self.id()
         res = self.cli.logs(
             container=container_id,
             stdout=True,
             stderr=False,
             timestamps=True,
-            tail='all',
+            tail=tail,
             since=since
         ).decode()
         return res
 
+    def __log_stream(self, since=0, tail='all'):
+        container_id = self.id()
+        res = self.cli.logs(
+            container=container_id,
+            stdout=True,
+            stderr=False,
+            timestamps=True,
+            tail=tail,
+            since=since,
+            stream=True
+        )
+        return res
+
     def log(self):
-        res = self.__log(self.start_time)
+        # set tail to 100, because it may be timeout when log too big
+        res = self.__log(since=self.start_time, tail=100)
         return res.split('\n')
 
     def init_config_file(self):
