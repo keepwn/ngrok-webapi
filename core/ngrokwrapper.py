@@ -106,9 +106,9 @@ class Ngrok:
         yaml_dir = os.path.split(yaml_path)[0]
         if not os.path.exists(yaml_dir):
             os.mkdir(yaml_dir)
-        
+
         data = self.config.dump()
-        
+
         with open(yaml_path, "w") as f:
             yaml.dump(data, f, default_flow_style=False)
 
@@ -132,7 +132,10 @@ class Ngrok:
             image=self.image,
             command=self.command,
             volumes=self.volumes[0],
-            host_config=self.cli.create_host_config(binds=self.volumes[1])
+            host_config=self.cli.create_host_config(
+                binds=self.volumes[1],
+                restart_policy={ 'MaximumRetryCount': 0, 'Name': 'always' }
+            )
         )
 
         return container.get('Id')
