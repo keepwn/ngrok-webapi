@@ -21,7 +21,7 @@ class Info(Handler):
 
 class Tunnels(Handler):
 
-    def options(self, id):
+    def options(self):
         set_options(self)
         return ''
 
