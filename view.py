@@ -77,8 +77,10 @@ class TunnelLog(Handler):
 
     def get(self, id):
         try:
+            offset = int(self.request.args.get('offset', 0))
+            limit = int(self.request.args.get('limit', 10))
             tunnel = NM.get_tunnel_instance_by_id(id)
-            result = tunnel.log()
+            result = tunnel.log(offset=offset, limit=limit)
             return {'data': result, 'error': 0}
         except TunnelManagerError as e:
             return {'data': None, 'error': 1, 'msg': e.message}

@@ -96,10 +96,11 @@ class Ngrok:
         )
         return res
 
-    def log(self):
+    def log(self, offset=0, limit=10):
         # set tail to 100, because it may be timeout when log too big
         res = self.__log(since=self.start_time, tail=100)
-        return res.split('\n')
+        lines = res.split('\n')
+        return lines[offset:offset+limit]
 
     def init_config_file(self):
         yaml_path = self.config.yaml_path_in_container
