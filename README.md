@@ -32,8 +32,8 @@ docker build -t ngrok-webapi -f Dockerfile-ngrok-webapi .
 docker run -d \
     --name=ngrok-webapi \
     --restart=always \
-    --net=host \
-    -v ./ngrok-webapi:/code \
+    -p 5000:5000 \
+    -v /var/run/docker.sock:/var/run/docker.sock \
     -v ./ngrok-bin:/release
     ngrok-webapi
 
