@@ -35,7 +35,7 @@ docker run -d \
     --restart=always \
     -p 5000:5000 \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    -v ./ngrok-bin:/release
+    -v ./ngrok-bin:/ngrok-bin
     ngrok-webapi
 
 # enjoy
