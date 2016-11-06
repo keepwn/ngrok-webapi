@@ -1,7 +1,7 @@
 from peewee import *
 import json
 
-db = SqliteDatabase('database.db')
+db = SqliteDatabase('data/database.db')
 
 
 class Tunnel(Model):
