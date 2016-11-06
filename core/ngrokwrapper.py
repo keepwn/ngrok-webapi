@@ -12,7 +12,7 @@ class Ngrok:
         self.cli = docker_cli
         self.config = config
         self.name = 'ngrok_' + config.name + '_'
-        self.image = 'alpine:latest'
+        self.image = 'alpine:3.4'
         self.command = config.command()
         self.volumes = config.volumes()
         self.ports = config.ports()
