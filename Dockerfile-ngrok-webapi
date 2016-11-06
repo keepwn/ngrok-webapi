@@ -1,8 +1,16 @@
 FROM python:3-alpine
 MAINTAINER keepwn <keepwn@gmail.com>
 
-COPY ./requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt
+RUN apk update && \
+    apk add git && \
+    git clone https://github.com/keepwn/ngrok-webapi.git /code && \
+    apk del --purge git && \
+    rm -rf /var/cache/apk/*
 
 WORKDIR /code
-CMD ["gunicorn", "-b", ":5000", "view:app", "--reload"]
+RUN pip3 install -r requirements.txt
+
+VOLUME ['/release']
+EXPOSE 5000
+
+CMD ["sh", "run.sh"]
