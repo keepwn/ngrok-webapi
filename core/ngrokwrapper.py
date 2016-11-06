@@ -134,8 +134,7 @@ class Ngrok:
             command=self.command,
             volumes=self.volumes[0],
             host_config=self.cli.create_host_config(
-                binds=self.volumes[1],
-                restart_policy={ 'MaximumRetryCount': 0, 'Name': 'always' }
+                binds=self.volumes[1]
             )
         )
 
