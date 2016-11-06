@@ -28,6 +28,7 @@ docker run --rm \
 # build image: ngrok-webapi
 docker build -t ngrok-webapi -f Dockerfile-ngrok-webapi .
 
+# please modify app.conf
 # create container and run
 docker run -d \
     --name=ngrok-webapi \
