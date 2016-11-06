@@ -21,6 +21,10 @@ class Info(Handler):
 
 class Tunnels(Handler):
 
+    def options(self, id):
+        set_options(self)
+        return ''
+
     def get(self):
         res = NM.list()
         return {'data': res, 'error': 0}
@@ -38,6 +42,10 @@ class Tunnels(Handler):
 
 
 class Tunnel(Handler):
+
+    def options(self, id):
+        set_options(self)
+        return ''
 
     def get(self, id):
         try:
@@ -99,7 +107,18 @@ class TunnelStatus(Handler):
             return {'data': None, 'error': 1, 'msg': e.message}
 
 
+def after(handler):
+    handler.response.set_header('Access-Control-Allow-Origin', '*')
+
+def set_options(handler):
+    handler.response.set_header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE')
+    handler.response.set_header('Access-Control-Allow-Headers', 'Content-Type')
+    handler.response.status_code = 204
+
+
 class app(WSGI):
+    after = after
+
     routes = [
         ("/info", Info()),
         ("/api/tunnels", Tunnels()),
