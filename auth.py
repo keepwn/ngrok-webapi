@@ -6,16 +6,18 @@ from model import Auth
 
 class AuthError(HTTPError):
 
-    status_code = 401
+    status_code = 200
     message = "401 Not Authorized"
-
+    data = None
+    headers = [['Access-Control-Allow-Origin', '*']]
     def __init__(self):
-        pass
+        super(HTTPError, self).__init__(self.status_code, self.message, self.data, self.headers)
 
     def response(self):
         return {
-            "error": self.status_code,
-            "msg": self.message
+            "error": 401,
+            "msg": self.message,
+            "data": self.data
         }
 
 
