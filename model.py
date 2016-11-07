@@ -17,6 +17,13 @@ class Tunnel(Model):
         database = db
 
 
+class Auth(Model):
+    token = CharField()
+
+    class Meta:
+        database = db
+
+
 def tunnel_to_dict(row):
     d = {}
     d['id'] = row.id
@@ -35,3 +42,7 @@ def database_init():
         Tunnel.create_table()
     except OperationalError:
         print("tunnel table already exists!")
+    try:
+        Auth.create_table()
+    except OperationalError:
+        print("auth table already exists!")
