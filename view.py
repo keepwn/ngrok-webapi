@@ -94,14 +94,15 @@ class Tunnel(Handler):
 
         msg, result = '', ''
         try:
-            if action == 'start':
+            # if no action, default to update
+            if action == '':
+                result = NM.update(id, self.request.data)
+            elif action == 'start':
                 result = NM.start(id)
             elif action == 'stop':
                 result = NM.stop(id)
             elif action == 'rebuild':
                 result = NM.rebuild(id)
-            elif action == 'update':
-                result = NM.update(id, self.request.data)
         except TunnelManagerError as e:
             msg = e.message
 
