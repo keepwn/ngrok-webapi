@@ -114,15 +114,26 @@ class NgrokManager:
     def create(self, tunnel_dict):
         try:
             print(tunnel_dict)
+
+            # check
+            t_name = tunnel_dict.get('name', '')
+            t_localaddr = tunnel_dict.get('localaddr', '')
+            t_remoteport = tunnel_dict.get('remoteport', '')
+            t_proto = tunnel_dict.get('proto', '')
+            t_auth = tunnel_dict.get('auth', '')
+            t_hostname = tunnel_dict.get('hostname', '')
+
+            if (not t_name) or (not t_localaddr) or (not t_proto):
+               raise TunnelManagerError(None, 'need tunnel name, localaddr, proto')
+
             new = Tunnel(
-                name=tunnel_dict['name'] if tunnel_dict.get(
-                    'name', '') else 'default',
-                hostname=tunnel_dict.get('hostname', ''),
-                localaddr=tunnel_dict.get('localaddr', ''),
-                remoteport=tunnel_dict.get('remoteport', ''),
-                proto=tunnel_dict.get('proto', ''),
-                auth=tunnel_dict.get('auth', ''),
-                starttime=0
+                name = t_name,
+                localaddr = t_localaddr,
+                remoteport = t_remoteport,
+                proto = t_proto,
+                auth = t_auth,
+                hostname = t_hostname,
+                starttime = 0
             )
             # insert new tunnel into db
             new.save()
@@ -131,5 +142,47 @@ class NgrokManager:
             self.rebuild(new.id)
 
             return self.get(new.id)
+        except peewee.IntegrityError as e:
+            raise TunnelManagerError(e, 'tunnel name should be UNIQUE in db')
+
+    def update(self, id, tunnel_dict):
+        try:
+            print(tunnel_dict)
+
+            # check
+            t_name = tunnel_dict.get('name', '')
+            t_localaddr = tunnel_dict.get('localaddr', '')
+            t_remoteport = tunnel_dict.get('remoteport', '')
+            t_proto = tunnel_dict.get('proto', '')
+            t_auth = tunnel_dict.get('auth', '')
+            t_hostname = tunnel_dict.get('hostname', '')
+
+            if (not t_name) or (not t_localaddr) or (not t_proto):
+               raise TunnelManagerError(None, 'need tunnel name, localaddr, proto')
+
+            # remove old tunnel instance
+            tunnel = Tunnel.get(Tunnel.id == id)
+            tunnel_instance = self.get_tunnel_instance(tunnel)
+            if tunnel_instance.exists():
+                tunnel_instance.down()
+
+            # update new tunnel
+            tunnel.name = t_name
+            tunnel.localaddr = t_localaddr
+            tunnel.remoteport = t_remoteport
+            tunnel.proto = t_proto
+            tunnel.auth = t_auth
+            tunnel.hostname = t_hostname
+            tunnel.starttime = 0
+            # update
+            tunnel.save()
+
+            # create new tunnel instance
+            # if already exist, then rebuild(down and up)
+            self.rebuild(id)
+
+            return self.get(id)
+        except peewee.DoesNotExist as e:
+            raise TunnelManagerError(e, 'id does not exist in db')
         except peewee.IntegrityError as e:
             raise TunnelManagerError(e, 'tunnel name should be UNIQUE in db')

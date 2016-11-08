@@ -100,6 +100,8 @@ class Tunnel(Handler):
                 result = NM.stop(id)
             elif action == 'rebuild':
                 result = NM.rebuild(id)
+            elif action == 'update':
+                result = NM.update(id, self.request.data)
         except TunnelManagerError as e:
             msg = e.message
 
