@@ -13,4 +13,7 @@ RUN pip3 install -r requirements.txt
 VOLUME /ngrok-bin
 EXPOSE 5000
 
+ENV SERVER_ADDR ''
+ENV TRUST_HOST_ROOT_CERTS ''
+
 CMD ["sh", "run.sh"]
