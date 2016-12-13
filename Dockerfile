@@ -10,7 +10,7 @@ RUN apk update && \
 WORKDIR /ngrok-webapi
 RUN pip3 install -r requirements.txt
 
-VOLUME '/ngrok-bin'
+VOLUME /ngrok-bin
 EXPOSE 5000
 
 CMD ["sh", "run.sh"]
