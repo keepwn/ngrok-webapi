@@ -10,10 +10,11 @@ RUN apk update && \
 WORKDIR /ngrok-webapi
 RUN pip3 install -r requirements.txt
 
-VOLUME /ngrok-bin
-EXPOSE 5000
-
 ENV SERVER_ADDR ''
 ENV TRUST_HOST_ROOT_CERTS ''
+ENV RUNTIME_DIR ''
+ENV RUNTIME_DIR_IN_CONTAINER ''
+
+EXPOSE 5000
 
 CMD ["sh", "run.sh"]
