@@ -31,14 +31,16 @@ class Token(Handler):
         old = self.request.data.get('old_token', '')
         new = self.request.data.get('new_token', '')
 
-        if new:
-            res = change_auth(old, new)
-            if res:
-                return {'data': res, 'error': 0}
-            else:
-                return {'data': None, 'error': 1, 'msg': 'not match old token'}
-        else:
+        if not new:
             return {'data': None, 'error': 1, 'msg': 'need new token'}
+        if len(new) < 32:
+            return {'data': None, 'error': 1, 'msg': 'new token length must >= 32'}
+
+        res = change_auth(old, new)
+        if res:
+            return {'data': res, 'error': 0}
+        else:
+            return {'data': None, 'error': 1, 'msg': 'not match old token'}
 
 
 class Tunnels(Handler):
