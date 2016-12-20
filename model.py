@@ -1,5 +1,7 @@
 from peewee import *
 import json
+import string
+import random
 
 db = SqliteDatabase('data/database.db')
 
@@ -23,6 +25,12 @@ class Auth(Model):
     class Meta:
         database = db
 
+    @staticmethod
+    def token_gen(len):
+        str = string.ascii_letters + string.digits
+        keylist = [random.choice(str) for i in range(len)]
+        return "".join(keylist)
+
 
 def tunnel_to_dict(row):
     d = {}
@@ -44,5 +52,9 @@ def database_init():
         print("tunnel table already exists!")
     try:
         Auth.create_table()
+        random_token = Auth.token_gen(32)
+        Auth.create(token=random_token)
+        print("auth token: " + random_token)
     except OperationalError:
         print("auth table already exists!")
+
