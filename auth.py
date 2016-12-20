@@ -40,7 +40,7 @@ def verify_auth(request):
         except:
             return False
     else:
-        return True
+        return False
 
 def change_auth(old_token, new_token):
     if Auth.select().count() > 0:
@@ -55,5 +55,4 @@ def change_auth(old_token, new_token):
         except:
             return False
     else:
-        Auth.create(token=new_token)
-        return True
+        return False
